@@ -1,4 +1,3 @@
-version: '3'
 services:
   postgres:
     image: postgres:13
@@ -34,9 +33,8 @@ services:
 
   auto-service:
     build:
-      context: ./auto-service
-      dockerfile: src/main/docker/Dockerfile.jvm
-    image: ghcr.io/r33bickard/autoverwaltung/auto-service:latest
+      context: .
+      dockerfile: auto-service/Dockerfile
     environment:
       KAFKA_BOOTSTRAP_SERVERS: redpanda-1:9092
       QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/autodb
@@ -50,14 +48,13 @@ services:
 
   validation-service:
     build:
-      context: ./validation-service
-      dockerfile: src/main/docker/Dockerfile.jvm
-    image: ghcr.io/r33bickard/autoverwaltung/validation-service:latest
+      context: .
+      dockerfile: validation-service/Dockerfile
     environment:
       KAFKA_BOOTSTRAP_SERVERS: redpanda-1:9092
       QUARKUS_HTTP_PORT: 8081
     ports:
-      - "8082:8081"
+      - "8083:8081"
     networks:
       - auto-nw
     depends_on:
