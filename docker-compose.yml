@@ -1,0 +1,69 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: autodb
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - auto-nw
+    ports:
+      - "5432:5432"
+
+  redpanda-1:
+    image: docker.redpanda.com/redpandadata/redpanda:v23.3.5
+    command: redpanda start --advertise-kafka-addr redpanda-1:9092
+    ports:
+      - "9092:9092"
+    networks:
+      - auto-nw
+
+  redpanda-console:
+    image: docker.redpanda.com/redpandadata/console:v2.8.2
+    environment:
+      KAFKA_BROKERS: redpanda-1:9092
+    ports:
+      - "8081:8080"
+    networks:
+      - auto-nw
+    depends_on:
+      - redpanda-1
+
+  auto-service:
+    build:
+      context: ./auto-service
+      dockerfile: src/main/docker/Dockerfile.jvm
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: redpanda-1:9092
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/autodb
+    ports:
+      - "8080:8080"
+    networks:
+      - auto-nw
+    depends_on:
+      - postgres
+      - redpanda-1
+
+  validation-service:
+    build:
+      context: ./validation-service
+      dockerfile: src/main/docker/Dockerfile.jvm
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: redpanda-1:9092
+      QUARKUS_HTTP_PORT: 8081
+    ports:
+      - "8082:8081"
+    networks:
+      - auto-nw
+    depends_on:
+      - redpanda-1
+
+networks:
+  auto-nw:
+    driver: bridge
+
+volumes:
+  postgres-data:
