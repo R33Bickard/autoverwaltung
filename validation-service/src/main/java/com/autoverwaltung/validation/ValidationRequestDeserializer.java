@@ -1,4 +1,4 @@
-package com.autoverwaltung.validation;
+package main.java.com.autoverwaltung.validation;
 
 import io.quarkus.kafka.client.serialization.ObjectMapperDeserializer;
 

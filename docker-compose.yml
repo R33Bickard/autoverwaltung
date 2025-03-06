@@ -36,6 +36,7 @@ services:
     build:
       context: ./auto-service
       dockerfile: src/main/docker/Dockerfile.jvm
+    image: ghcr.io/r33bickard/autoverwaltung/auto-service:latest
     environment:
       KAFKA_BOOTSTRAP_SERVERS: redpanda-1:9092
       QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/autodb
@@ -51,6 +52,7 @@ services:
     build:
       context: ./validation-service
       dockerfile: src/main/docker/Dockerfile.jvm
+    image: ghcr.io/r33bickard/autoverwaltung/validation-service:latest
     environment:
       KAFKA_BOOTSTRAP_SERVERS: redpanda-1:9092
       QUARKUS_HTTP_PORT: 8081
