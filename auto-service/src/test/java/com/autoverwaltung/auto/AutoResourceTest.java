@@ -11,7 +11,7 @@ class AutoResourceTest {
     @Test
     void testHelloEndpoint() {
         given()
-          .when().get("/C:/Program Files/Git/autos")
+          .when().get("/autos")
           .then()
              .statusCode(200)
              .body(is("Hello from Quarkus REST"));
