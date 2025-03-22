@@ -1,3 +1,3 @@
-package main.java.com.autoverwaltung.validation;
+package com.autoverwaltung.validation;
 
 public record ValidationResponse(long id, boolean valid) {}

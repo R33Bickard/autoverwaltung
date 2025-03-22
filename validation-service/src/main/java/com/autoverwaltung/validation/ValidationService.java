@@ -1,4 +1,4 @@
-package main.java.com.autoverwaltung.validation;
+package com.autoverwaltung.validation;
 
 import java.time.Year;
 
